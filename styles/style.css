@@ -1,7 +1,8 @@
 body {
   font-family: sans-serif;
   background-color: #f9f9f9;
-  display: flex;
+  display: inline-block;
+  white-space: nowrap;  
   height: 100vh;
   justify-content: center;
   align-items: center;
@@ -25,4 +26,19 @@ button {
   font-size: 1em;
   margin: 0 10px;
   cursor: pointer;
+}
+
+#colorButtons {
+  margin-top: 20px;
+}
+
+.colorBtn {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.colorBtn.red {
+  background-color: red;
+  color: white;
 }

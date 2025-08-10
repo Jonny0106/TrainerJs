@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Website</title>
+   <h1>Welcome to My Website</h1>
   <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
@@ -14,11 +15,20 @@
     <p>This is my first website from scratch!</p>
   </main>
   <div class="container">
-    <h1>Timer</h1>
+    <h2>Timer</h2>
     <div id="display">00:00:00</div>
     <button id="startBtn">Start</button>
     <button id="stopBtn">Stop</button>
+    <button id="resetBtn">Reset</button>
   </div>
+  <div class="container">
+  <h3>Dynamic Red Buttons</h3>
+
+  <input type="number" id="buttonCount" min="1" placeholder="Enter number of buttons" />
+  <button id="generateBtn">Generate Buttons</button>
+
+  <div id="colorButtons"></div>
+</div>
   <script src="scripts/main.js"></script>
 </body>
 </html>
