@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Website</title>
-   <h1>Welcome to My Website</h1>
-  <link rel="stylesheet" href="styles/style.css" />
-</head>
-<body>
-  <header>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Website</title>
     <h1>Welcome to My Website</h1>
-  </header>
-  <main>
-    <p>This is my first website from scratch!</p>
-  </main>
-  <div class="container">
-    <h2>Timer</h2>
-    <div id="display">00:00:00</div>
-    <button id="startBtn">Start</button>
-    <button id="stopBtn">Stop</button>
-    <button id="resetBtn">Reset</button>
-  </div>
-  <div class="container">
-  <h3>Dynamic Red Buttons</h3>
+    <link rel="stylesheet" href="styles/style.css" />
+</head>
 
-  <input type="number" id="buttonCount" min="1" placeholder="Enter number of buttons" />
-  <button id="generateBtn">Generate Buttons</button>
+<body>
+    <header>
+        <h1>Welcome to My Website</h1>
+    </header>
+    <main>
+        <p>This is my first website from scratch!</p>
+    </main>
+    <div class="container">
+        <h2>Timer</h2>
+        <div id="display">00:00:00</div>
+        <div id="resultDisplay"></div>
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+    <div class="container">
+        <h3>Dynamic Red Buttons</h3>
 
-  <div id="colorButtons"></div>
-</div>
-  <script src="scripts/main.js"></script>
+        <input type="number" id="buttonCount" min="1" placeholder="Enter number of buttons" />
+        <button id="generateBtn">Generate Buttons</button>
+
+        <div id="colorButtons"></div>
+    </div>
+    <script src="scripts/main.js"></script>
 </body>
+
 </html>
