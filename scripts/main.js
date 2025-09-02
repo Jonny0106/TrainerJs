@@ -10,9 +10,12 @@ const resultDisplay = document.getElementById('resultDisplay');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const resetBtn = document.getElementById('resetBtn');
-const generateBtn = document.getElementById('generateBtn');
-const buttonCountInput = document.getElementById('buttonCount');
-const colorButtonsContainer = document.getElementById('colorButtons');
+const newSectionNameInput = document.getElementById('newSectionName');
+const addSectionBtn = document.getElementById('addSectionBtn');
+const buttonSectionsContainer = document.getElementById('buttonSections');
+
+// Section management
+let sectionIdCounter = 1;
 
 // Initialize timer display
 if (display) {
@@ -112,51 +115,137 @@ if (resetBtn) {
     resetBtn.addEventListener('click', resetTimer);
 }
 
-// Dynamic button generation
-if (generateBtn && buttonCountInput && colorButtonsContainer) {
-    generateBtn.addEventListener('click', () => {
-        const count = parseInt(buttonCountInput.value, 10);
-        
-        if (isNaN(count) || count < 1) {
-            alert('Please enter a valid number greater than 0');
-            return;
-        }
-        
-        colorButtonsContainer.innerHTML = ''; // Clear existing buttons
+// Add section button event listener
+if (addSectionBtn && newSectionNameInput) {
+    addSectionBtn.addEventListener('click', addNewSection);
+}
 
-        for (let i = 1; i <= count; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'colorBtn';
-            btn.textContent = '5';
+// Section Management Functions
+function createButtonSection(name, id) {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'container button-section';
+    sectionDiv.setAttribute('data-section-id', id);
+    
+    sectionDiv.innerHTML = `
+        <div class="section-header">
+            <input type="text" class="section-name-input" value="${name}" />
+            <button class="delete-section-btn">Delete</button>
+        </div>
+        <div class="button-generator">
+            <input type="number" class="section-button-count" min="1" value="5" placeholder="Enter number of buttons" />
+            <button class="generate-section-btn">Generate Buttons</button>
+        </div>
+        <div class="color-buttons"></div>
+    `;
+    
+    // Add event listeners for this section
+    const deleteBtn = sectionDiv.querySelector('.delete-section-btn');
+    const generateBtn = sectionDiv.querySelector('.generate-section-btn');
+    const buttonCountInput = sectionDiv.querySelector('.section-button-count');
+    const colorButtonsContainer = sectionDiv.querySelector('.color-buttons');
+    
+    deleteBtn.addEventListener('click', () => deleteSection(id));
+    generateBtn.addEventListener('click', () => generateButtons(id, buttonCountInput, colorButtonsContainer));
+    
+    return sectionDiv;
+}
 
-            btn.addEventListener('click', () => {
-                if (intervalId) {
-                    clearInterval(intervalId);
-                    intervalId = null;
-                    startTime = 0;
-                } 
+function addNewSection() {
+    const name = newSectionNameInput.value.trim();
+    if (!name) {
+        alert('Please enter a section name');
+        return;
+    }
+    
+    sectionIdCounter++;
+    const newSection = createButtonSection(name, sectionIdCounter);
+    buttonSectionsContainer.appendChild(newSection);
+    newSectionNameInput.value = '';
+    updateDeleteButtons();
+}
 
-                if (btn.textContent === '5' && !btn.classList.contains('red')) {
-                    btn.classList.add('red');
-                } else {
-                    btn.textContent = parseInt(btn.textContent) - 1;
-                }
-                
-                if (btn.textContent === '0') {
-                    btn.classList.remove('red');
-                    btn.textContent = '5';
-                    if (display) {
-                        display.textContent = "00:00:00";
-                    }
-                } else {
-                    startTimer();
-                }
-            });
+function deleteSection(sectionId) {
+    const sections = buttonSectionsContainer.querySelectorAll('.button-section');
+    if (sections.length <= 1) {
+        alert('You must have at least one section');
+        return;
+    }
+    
+    const sectionToDelete = buttonSectionsContainer.querySelector(`[data-section-id="${sectionId}"]`);
+    if (sectionToDelete) {
+        sectionToDelete.remove();
+        updateDeleteButtons();
+    }
+}
 
-            colorButtonsContainer.appendChild(btn);
-        }
+function updateDeleteButtons() {
+    const sections = buttonSectionsContainer.querySelectorAll('.button-section');
+    const deleteButtons = buttonSectionsContainer.querySelectorAll('.delete-section-btn');
+    
+    deleteButtons.forEach(btn => {
+        btn.disabled = sections.length <= 1;
     });
 }
+
+function generateButtons(sectionId, buttonCountInput, colorButtonsContainer) {
+    const count = parseInt(buttonCountInput.value, 10);
+    
+    if (isNaN(count) || count < 1) {
+        alert('Please enter a valid number greater than 0');
+        return;
+    }
+    
+    colorButtonsContainer.innerHTML = ''; // Clear existing buttons
+
+    for (let i = 1; i <= count; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'colorBtn';
+        btn.textContent = '5';
+
+        btn.addEventListener('click', () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+                startTime = 0;
+            } 
+
+            if (btn.textContent === '5' && !btn.classList.contains('red')) {
+                btn.classList.add('red');
+            } else {
+                btn.textContent = parseInt(btn.textContent) - 1;
+            }
+            
+            if (btn.textContent === '0') {
+                btn.classList.remove('red');
+                btn.textContent = '5';
+                if (display) {
+                    display.textContent = "00:00:00";
+                }
+            } else {
+                startTimer();
+            }
+        });
+
+        colorButtonsContainer.appendChild(btn);
+    }
+}
+
+// Initialize existing sections with event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const existingSections = document.querySelectorAll('.button-section');
+    existingSections.forEach(section => {
+        const sectionId = section.getAttribute('data-section-id') || '1';
+        const deleteBtn = section.querySelector('.delete-section-btn');
+        const generateBtn = section.querySelector('.generate-section-btn');
+        const buttonCountInput = section.querySelector('.section-button-count');
+        const colorButtonsContainer = section.querySelector('.color-buttons');
+        
+        if (deleteBtn) deleteBtn.addEventListener('click', () => deleteSection(sectionId));
+        if (generateBtn) generateBtn.addEventListener('click', () => generateButtons(sectionId, buttonCountInput, colorButtonsContainer));
+    });
+    
+    updateDeleteButtons();
+});
 
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {

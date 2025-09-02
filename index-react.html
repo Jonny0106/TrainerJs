@@ -455,6 +455,89 @@
                 min-height: 50px;
             }
         }
+        
+        /* New Section Management Styles */
+        .add-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-section input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .add-section button {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .add-section button:hover {
+            background-color: #218838;
+        }
+
+        .button-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .section-name-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background-color: white;
+        }
+
+        .delete-section-btn {
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .delete-section-btn:hover:not(:disabled) {
+            background-color: #c82333;
+        }
+
+        .delete-section-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .button-section .button-generator {
+            margin-bottom: 15px;
+        }
+
+        .button-section h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -799,8 +882,15 @@
             const [endTimes, setEndTimes] = useState([]);
             const [display, setDisplay] = useState('00:00:00');
             const [resultDisplay, setResultDisplay] = useState('');
-            const [buttonCount, setButtonCount] = useState(5);
-            const [colorButtons, setColorButtons] = useState([]);
+            const [newSectionName, setNewSectionName] = useState('');
+            const [buttonSections, setButtonSections] = useState([
+                {
+                    id: 1,
+                    name: 'Dynamic Red Buttons',
+                    buttonCount: 5,
+                    colorButtons: []
+                }
+            ]);
 
             useEffect(() => {
                 setDisplay(formatTimeFromSeconds(timerDuration));
@@ -881,7 +971,7 @@
                 setResultDisplay("");
             }, [intervalId, timerDuration]);
 
-            const generateButtons = () => {
+            const generateButtons = (sectionId, buttonCount) => {
                 if (buttonCount < 1) {
                     alert('Please enter a valid number greater than 0');
                     return;
@@ -895,33 +985,88 @@
                         isRed: false
                     });
                 }
-                setColorButtons(newButtons);
+                
+                setButtonSections(prev => prev.map(section => {
+                    if (section.id === sectionId) {
+                        return { ...section, colorButtons: newButtons };
+                    }
+                    return section;
+                }));
             };
 
-            const handleColorButtonClick = (buttonId) => {
-                setColorButtons(prev => prev.map(btn => {
-                    if (btn.id === buttonId) {
-                        if (intervalId) {
-                            clearInterval(intervalId);
-                            setIntervalId(null);
-                            setStartTime(0);
-                        }
+            const handleColorButtonClick = (sectionId, buttonId) => {
+                setButtonSections(prev => prev.map(section => {
+                    if (section.id === sectionId) {
+                        const updatedButtons = section.colorButtons.map(btn => {
+                            if (btn.id === buttonId) {
+                                if (intervalId) {
+                                    clearInterval(intervalId);
+                                    setIntervalId(null);
+                                    setStartTime(0);
+                                }
 
-                        if (btn.count === 5 && !btn.isRed) {
-                            return { ...btn, isRed: true };
-                        } else {
-                            const newCount = btn.count - 1;
-                            if (newCount === 0) {
-                                setDisplay("00:00:00");
-                                return { ...btn, count: 5, isRed: false };
-                            } else {
-                                startTimer();
-                                return { ...btn, count: newCount };
+                                if (btn.count === 5 && !btn.isRed) {
+                                    return { ...btn, isRed: true };
+                                } else {
+                                    const newCount = btn.count - 1;
+                                    if (newCount === 0) {
+                                        setDisplay("00:00:00");
+                                        return { ...btn, count: 5, isRed: false };
+                                    } else {
+                                        startTimer();
+                                        return { ...btn, count: newCount };
+                                    }
+                                }
                             }
-                        }
+                            return btn;
+                        });
+                        return { ...section, colorButtons: updatedButtons };
                     }
-                    return btn;
+                    return section;
                 }));
+            };
+
+            const updateSectionButtonCount = (sectionId, count) => {
+                setButtonSections(prev => prev.map(section => {
+                    if (section.id === sectionId) {
+                        return { ...section, buttonCount: count };
+                    }
+                    return section;
+                }));
+            };
+
+            const updateSectionName = (sectionId, name) => {
+                setButtonSections(prev => prev.map(section => {
+                    if (section.id === sectionId) {
+                        return { ...section, name: name };
+                    }
+                    return section;
+                }));
+            };
+
+            const addNewSection = () => {
+                if (!newSectionName.trim()) {
+                    alert('Please enter a section name');
+                    return;
+                }
+                
+                const newSection = {
+                    id: Math.max(...buttonSections.map(s => s.id)) + 1,
+                    name: newSectionName.trim(),
+                    buttonCount: 5,
+                    colorButtons: []
+                };
+                
+                setButtonSections(prev => [...prev, newSection]);
+                setNewSectionName('');
+            };
+
+            const deleteSection = (sectionId) => {
+                if (buttonSections.length <= 1) {
+                    alert('You must have at least one section');
+                    return;
+                }
+                setButtonSections(prev => prev.filter(section => section.id !== sectionId));
             };
 
             const handleLogout = () => {
@@ -952,29 +1097,58 @@
                         </div>
                         
                         <div className="container">
-                            <h3>Dynamic Red Buttons</h3>
-                            <div className="button-generator">
+                            <h3>Add New Section</h3>
+                            <div className="add-section">
                                 <input
-                                    type="number"
-                                    value={buttonCount}
-                                    onChange={(e) => setButtonCount(parseInt(e.target.value) || 1)}
-                                    min="1"
-                                    placeholder="Enter number of buttons"
+                                    type="text"
+                                    value={newSectionName}
+                                    onChange={(e) => setNewSectionName(e.target.value)}
+                                    placeholder="Enter section name"
                                 />
-                                <button onClick={generateButtons}>Generate Buttons</button>
-                            </div>
-                            <div className="color-buttons">
-                                {colorButtons.map(button => (
-                                    <button
-                                        key={button.id}
-                                        className={`color-btn ${button.isRed ? 'red' : ''}`}
-                                        onClick={() => handleColorButtonClick(button.id)}
-                                    >
-                                        {button.count}
-                                    </button>
-                                ))}
+                                <button onClick={addNewSection}>Add Section</button>
                             </div>
                         </div>
+
+                        {buttonSections.map(section => (
+                            <div key={section.id} className="container button-section">
+                                <div className="section-header">
+                                    <input
+                                        type="text"
+                                        value={section.name}
+                                        onChange={(e) => updateSectionName(section.id, e.target.value)}
+                                        className="section-name-input"
+                                    />
+                                    <button 
+                                        onClick={() => deleteSection(section.id)}
+                                        className="delete-section-btn"
+                                        disabled={buttonSections.length <= 1}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                                <div className="button-generator">
+                                    <input
+                                        type="number"
+                                        value={section.buttonCount}
+                                        onChange={(e) => updateSectionButtonCount(section.id, parseInt(e.target.value) || 1)}
+                                        min="1"
+                                        placeholder="Enter number of buttons"
+                                    />
+                                    <button onClick={() => generateButtons(section.id, section.buttonCount)}>Generate Buttons</button>
+                                </div>
+                                <div className="color-buttons">
+                                    {section.colorButtons.map(button => (
+                                        <button
+                                            key={button.id}
+                                            className={`color-btn ${button.isRed ? 'red' : ''}`}
+                                            onClick={() => handleColorButtonClick(section.id, button.id)}
+                                        >
+                                            {button.count}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
                     </main>
                 </div>
             );

@@ -28,10 +28,25 @@
         </div>
         
         <div class="container">
-            <h3>Dynamic Red Buttons</h3>
-            <input type="number" id="buttonCount" min="1" placeholder="Enter number of buttons" />
-            <button id="generateBtn">Generate Buttons</button>
-            <div id="colorButtons"></div>
+            <h3>Add New Section</h3>
+            <div class="add-section">
+                <input type="text" id="newSectionName" placeholder="Enter section name" />
+                <button id="addSectionBtn">Add Section</button>
+            </div>
+        </div>
+
+        <div id="buttonSections">
+            <div class="container button-section" data-section-id="1">
+                <div class="section-header">
+                    <input type="text" class="section-name-input" value="Dynamic Red Buttons" />
+                    <button class="delete-section-btn" disabled>Delete</button>
+                </div>
+                <div class="button-generator">
+                    <input type="number" class="section-button-count" min="1" value="5" placeholder="Enter number of buttons" />
+                    <button class="generate-section-btn">Generate Buttons</button>
+                </div>
+                <div class="color-buttons"></div>
+            </div>
         </div>
     </main>
     
