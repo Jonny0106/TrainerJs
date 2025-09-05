@@ -36,13 +36,13 @@ function formatTimeFromSeconds(totalSeconds) {
 
 function playBeep() {
     console.log("Timer finished - beep!");
-    // const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    // const oscillator = audioCtx.createOscillator();
-    // oscillator.type = "sine";
-    // oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime);
-    // oscillator.connect(audioCtx.destination);
-    // oscillator.start();
-    // oscillator.stop(audioCtx.currentTime + 1);
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime);
+    oscillator.connect(audioCtx.destination);
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 1);
 }
 
 function startTimer() {
