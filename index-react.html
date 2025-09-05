@@ -463,12 +463,14 @@
             margin-bottom: 20px;
         }
 
-        .add-section input {
+        .add-section input,
+        .add-section select {
             flex: 1;
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 0.9rem;
+            background-color: white;
         }
 
         .add-section button {
@@ -883,14 +885,20 @@
             const [display, setDisplay] = useState('00:00:00');
             const [resultDisplay, setResultDisplay] = useState('');
             const [newSectionName, setNewSectionName] = useState('');
-            const [buttonSections, setButtonSections] = useState([
-                {
-                    id: 1,
-                    name: 'Dynamic Red Buttons',
-                    buttonCount: 5,
-                    colorButtons: []
-                }
-            ]);
+            const [buttonSections, setButtonSections] = useState([]);
+
+            const sectionOptions = [
+                'Dynamic Red Buttons',
+                'Exercise Counter',
+                'Workout Sets',
+                'Rest Intervals',
+                'Training Rounds',
+                'Repetition Tracker',
+                'Circuit Timer',
+                'Interval Training',
+                'Sprint Counter',
+                'Lap Counter'
+            ];
 
             useEffect(() => {
                 setDisplay(formatTimeFromSeconds(timerDuration));
@@ -1046,7 +1054,14 @@
 
             const addNewSection = () => {
                 if (!newSectionName.trim()) {
-                    alert('Please enter a section name');
+                    alert('Please select a section type');
+                    return;
+                }
+                
+                // Check if section with this name already exists
+                const existingNames = buttonSections.map(section => section.name);
+                if (existingNames.includes(newSectionName)) {
+                    alert('A section with this name already exists');
                     return;
                 }
                 
@@ -1062,10 +1077,6 @@
             };
 
             const deleteSection = (sectionId) => {
-                if (buttonSections.length <= 1) {
-                    alert('You must have at least one section');
-                    return;
-                }
                 setButtonSections(prev => prev.filter(section => section.id !== sectionId));
             };
 
@@ -1099,12 +1110,15 @@
                         <div className="container">
                             <h3>Add New Section</h3>
                             <div className="add-section">
-                                <input
-                                    type="text"
+                                <select
                                     value={newSectionName}
                                     onChange={(e) => setNewSectionName(e.target.value)}
-                                    placeholder="Enter section name"
-                                />
+                                >
+                                    <option value="">Choose section type...</option>
+                                    {sectionOptions.map(option => (
+                                        <option key={option} value={option}>{option}</option>
+                                    ))}
+                                </select>
                                 <button onClick={addNewSection}>Add Section</button>
                             </div>
                         </div>
@@ -1121,7 +1135,6 @@
                                     <button 
                                         onClick={() => deleteSection(section.id)}
                                         className="delete-section-btn"
-                                        disabled={buttonSections.length <= 1}
                                     >
                                         Delete
                                     </button>

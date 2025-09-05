@@ -10,7 +10,7 @@ const resultDisplay = document.getElementById('resultDisplay');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
 const resetBtn = document.getElementById('resetBtn');
-const newSectionNameInput = document.getElementById('newSectionName');
+const newSectionNameInput = document.getElementById('sectionNameSelect');
 const addSectionBtn = document.getElementById('addSectionBtn');
 const buttonSectionsContainer = document.getElementById('buttonSections');
 
@@ -36,14 +36,13 @@ function formatTimeFromSeconds(totalSeconds) {
 
 function playBeep() {
     console.log("Timer finished - beep!");
-    // Uncomment the following lines to enable audio beep
     // const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     // const oscillator = audioCtx.createOscillator();
     // oscillator.type = "sine";
     // oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime);
     // oscillator.connect(audioCtx.destination);
     // oscillator.start();
-    // oscillator.stop(audioCtx.currentTime + 0.3);
+    // oscillator.stop(audioCtx.currentTime + 1);
 }
 
 function startTimer() {
@@ -153,7 +152,16 @@ function createButtonSection(name, id) {
 function addNewSection() {
     const name = newSectionNameInput.value.trim();
     if (!name) {
-        alert('Please enter a section name');
+        alert('Please select a section type');
+        return;
+    }
+    
+    // Check if section with this name already exists
+    const existingSections = buttonSectionsContainer.querySelectorAll('.section-name-input');
+    const existingNames = Array.from(existingSections).map(input => input.value);
+    
+    if (existingNames.includes(name)) {
+        alert('A section with this name already exists');
         return;
     }
     
@@ -165,12 +173,6 @@ function addNewSection() {
 }
 
 function deleteSection(sectionId) {
-    const sections = buttonSectionsContainer.querySelectorAll('.button-section');
-    if (sections.length <= 1) {
-        alert('You must have at least one section');
-        return;
-    }
-    
     const sectionToDelete = buttonSectionsContainer.querySelector(`[data-section-id="${sectionId}"]`);
     if (sectionToDelete) {
         sectionToDelete.remove();
@@ -179,11 +181,11 @@ function deleteSection(sectionId) {
 }
 
 function updateDeleteButtons() {
-    const sections = buttonSectionsContainer.querySelectorAll('.button-section');
     const deleteButtons = buttonSectionsContainer.querySelectorAll('.delete-section-btn');
     
+    // Enable all delete buttons since we allow deleting all sections
     deleteButtons.forEach(btn => {
-        btn.disabled = sections.length <= 1;
+        btn.disabled = false;
     });
 }
 

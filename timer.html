@@ -30,23 +30,25 @@
         <div class="container">
             <h3>Add New Section</h3>
             <div class="add-section">
-                <input type="text" id="newSectionName" placeholder="Enter section name" />
+                <select id="sectionNameSelect">
+                    <option value="">Choose section type...</option>
+                    <option value="Dynamic Red Buttons">Dynamic Red Buttons</option>
+                    <option value="Exercise Counter">Exercise Counter</option>
+                    <option value="Workout Sets">Workout Sets</option>
+                    <option value="Rest Intervals">Rest Intervals</option>
+                    <option value="Training Rounds">Training Rounds</option>
+                    <option value="Repetition Tracker">Repetition Tracker</option>
+                    <option value="Circuit Timer">Circuit Timer</option>
+                    <option value="Interval Training">Interval Training</option>
+                    <option value="Sprint Counter">Sprint Counter</option>
+                    <option value="Lap Counter">Lap Counter</option>
+                </select>
                 <button id="addSectionBtn">Add Section</button>
             </div>
         </div>
 
         <div id="buttonSections">
-            <div class="container button-section" data-section-id="1">
-                <div class="section-header">
-                    <input type="text" class="section-name-input" value="Dynamic Red Buttons" />
-                    <button class="delete-section-btn" disabled>Delete</button>
-                </div>
-                <div class="button-generator">
-                    <input type="number" class="section-button-count" min="1" value="5" placeholder="Enter number of buttons" />
-                    <button class="generate-section-btn">Generate Buttons</button>
-                </div>
-                <div class="color-buttons"></div>
-            </div>
+            <!-- Sections will be added dynamically -->
         </div>
     </main>
     

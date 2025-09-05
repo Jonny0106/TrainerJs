@@ -338,12 +338,14 @@ button:hover {
     margin-bottom: 20px;
 }
 
-.add-section input {
+.add-section input,
+.add-section select {
     flex: 1;
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 0.9rem;
+    background-color: white;
 }
 
 .add-section button {
